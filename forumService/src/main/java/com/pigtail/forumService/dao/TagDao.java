@@ -6,6 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface TagDao extends JpaRepository<Tag,Long> {
-    List<Tag> findByForum(Forum forum);
+public interface TagDao extends JpaRepository<Tag,String> {
 }

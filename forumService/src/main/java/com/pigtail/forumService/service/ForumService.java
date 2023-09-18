@@ -12,8 +12,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 
@@ -24,47 +27,35 @@ public class ForumService {
     @Transactional
     @Modifying
     public ForumResponse save(ForumRequest forumRequest) {
-//        System.out.println(tags);
+        // Map all strings to tags
+        List<Tag> tags = forumRequest.getTags().stream().map(this::mapStringTotag).toList();
+        // Map all forumRequest to forum
         Forum forum = Forum.builder()
                 .name(forumRequest.getName())
                 .owner(userDao.findById(forumRequest.getOwnerId()).get())
                 .createdAt(new Date())
+                .tags(tags)
                 .build();
-//        System.out.println(forumRequest);
         forumDao.save(forum);
-        List<Tag> tags = forumRequest.getTags()
-                .stream()
-                .map(tag->mapToTags(tag,forum))
-                .toList();
-//        forum.setTags(tags);
-        Long currentId = forum.getId();
-        Forum forum1 = forumDao.findById(currentId).get();
-        forum1.setTags(tags);
-        System.out.println(forum1);
-        forumDao.save(forum1);
-//        System.out.println(forum);
+
         return ForumResponse.builder()
                 .ownerId(forum.getOwner().getId())
                 .name(forum.getName())
                 .id(forum.getId())
                 .createdAt(forum.getCreatedAt())
-                .tags(tagDao.findByForum(forum).stream().map(this::mapToString).toList())
+                .tags(forum.getTags().stream().map(Tag::getName).toList())
                 .build();
     }
 
-    private String mapToString(Tag tag) {
-        return tag.getName();
-    }
-
-    private Tag mapToTags(String string,Forum forum) {
-        Tag tag = Tag.builder()
-                .name(string)
-                .forum(forum)
-                .build();
-        tagDao.save(tag);
+    private Tag mapStringTotag(String string) {
+        Optional<Tag> optionalTag = tagDao.findById(string);
+        Tag tag = new Tag(string);
+        if(optionalTag.isEmpty()){
+            tagDao.save(tag);
+        }
         return tag;
-
     }
+
 
     public List<Forum> getAll() {
         return forumDao.findAll();

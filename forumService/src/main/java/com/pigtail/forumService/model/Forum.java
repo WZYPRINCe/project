@@ -47,10 +47,13 @@ public class Forum {
             nullable = false
     )
     private Date createdAt;
-//    @ManyToMany
-//    @JoinTable(
-//            name = "FORUM_TAG",
-//            joinColumns = @JoinColumn(name = "FORUM_ID"),
-//            inverseJoinColumns = @JoinColumn(name = "TAG_ID")
-//    )
+
+    @ManyToMany
+    @JoinTable(
+            name = "FORUM_TAG",
+            joinColumns = @JoinColumn(name = "FORUM_ID",referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "TAG_ID",referencedColumnName = "NAME")
+    )
+    private List<Tag> tags;
+
 }

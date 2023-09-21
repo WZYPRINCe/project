@@ -14,5 +14,6 @@ import java.util.List;
 public class ForumRequest {
     private String name;
     private Long ownerId;
-    private List<String> tags;
+    private String content;
+//    private List<String> tags;
 }

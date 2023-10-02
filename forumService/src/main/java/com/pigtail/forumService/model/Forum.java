@@ -47,11 +47,19 @@ public class Forum {
             nullable = false
     )
     private Date createdAt;
-    @Lob
+//    @Lob
     @Column(
-            name = "FORUM_CONTENT",
-            columnDefinition = "TEXT"
+            name = "FORUM_CONTENT"
+//            columnDefinition = "TEXT"
     )
     private String content;
+
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+    @JoinTable(
+            name = "FORUM_TAG",
+            joinColumns = @JoinColumn(name = "FORUM_ID",referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "TAG_ID",referencedColumnName = "NAME")
+    )
+    private List<Tag> tags;
 
 }

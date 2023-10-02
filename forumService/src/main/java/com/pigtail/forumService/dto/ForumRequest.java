@@ -15,5 +15,5 @@ public class ForumRequest {
     private String name;
     private Long ownerId;
     private String content;
-//    private List<String> tags;
+    private List<String> tags;
 }

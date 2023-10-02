@@ -5,6 +5,7 @@ import com.pigtail.forumService.dao.UserDao;
 import com.pigtail.forumService.dto.ForumRequest;
 import com.pigtail.forumService.dto.ForumResponse;
 import com.pigtail.forumService.model.Forum;
+import com.pigtail.forumService.model.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public class ForumService {
     private final ForumDao forumDao;
     private final UserDao userDao;
+    private final TagService tagService;
 
     public ForumResponse save(ForumRequest forumRequest){
         Forum forum = Forum.builder()
@@ -24,6 +26,7 @@ public class ForumService {
                 .createdAt(new Date())
                 .name(forumRequest.getName())
                 .owner(userDao.getReferenceById(forumRequest.getOwnerId()))
+                .tags(tagService.save(forumRequest.getTags()))
                 .build();
         forumDao.save(forum);
 
@@ -36,6 +39,7 @@ public class ForumService {
                 .ownerId(forum.getOwner().getId())
                 .createdAt(forum.getCreatedAt())
                 .name(forum.getName())
+                .tags(forum.getTags().stream().map(Tag::getName).toList())
                 .build();
     }
 

@@ -8,30 +8,31 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 @Entity
-@Table(name = "PROPERTY")
+@Table(name = "PROFILE")
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Property {
+public class Profile {
     @Id
-    @SequenceGenerator(name = "PROPERTY_SEQ",sequenceName = "PROPERTY_SEQ")
-    @GeneratedValue(generator = "PROPERTY_SEQ",strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "PROFILE_SEQ",sequenceName = "PROFILE_SEQ",allocationSize = 1)
+    @GeneratedValue(generator = "PROFILE_SEQ",strategy = GenerationType.SEQUENCE)
     private Long id;
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private int maxPeople;
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(
-            name = "PROP_ID",
+            name = "LOCATION_ID",
             referencedColumnName = "ID"
     )
-    private List<Order> orders;
-    @Column(name = "RATE")
-    private Double rate;
-    @OneToOne
+    private Location location;
+    private Double price;
+    private RoomType type;
+    @OneToMany
     @JoinColumn(
             name = "PROFILE_ID",
             referencedColumnName = "ID"
     )
-    private Profile profile;
+    private List<Image> images;
 
 }

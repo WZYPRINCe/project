@@ -10,10 +10,12 @@
         <module name="authService" />
         <module name="forumService" />
         <module name="searchService" />
-        <module name="orderService" />
         <module name="messageService" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="orderService" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
